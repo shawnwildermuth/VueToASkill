@@ -5,8 +5,8 @@
 }
 @section Scripts {
   <script src="~/node_modules/vue/dist/vue.js"></script>
-  <script src="~/node_modules/vee-validate/dist/vee-validate.js"></script>
-  <script src="~/js/contact.js" asp-append-version="true"></script>
+  <script src="~/js/wait-cursor.js"></script>
+  <script src="~/js/contact.js"></script>
 }
 <div>
   <div class="text-center">
@@ -15,50 +15,43 @@
   </div>
   <div class="row">
     <div class="col-6 offset-3">
-      <form method="post" id="theForm" v-on:submit.prevent="onSave()">
-        <h3>{{ title }}</h3>
+      <form method="post" id="theForm" 
+            v-on:submit.prevent="onSubmit()">
+        <wait-cursor :shown="busy" 
+                     message="Sending Mail...">
+        </wait-cursor>
+        <div :title="title">{{ title }}</div>
         <div class="form-group">
           <label>Name</label>
-          <input type="text" 
-                 class="form-control" 
-                 v-model="msg.name" 
-                 v-validate="{ required: true, min: 5 }" 
-                 name="name" 
-                 :class="{ 'border-danger': errors.has('name')}"/>
-          <span class="text-danger" v-if="errors.has('name')">{{ errors.first("name") }}</span>
+          <input type="text"
+                 class="form-control"
+                 name="name"
+                 v-model="msg.name" />
         </div>
         <div class="form-group">
           <label for="">Email</label>
-          <input type="email" 
-                 class="form-control" 
-                 name="email" 
-                 v-model="msg.email" 
-                 v-validate="{ required: true, email: true }" 
-                 :class="{ 'border-danger': errors.has('email')}"/>
-          <span class="text-danger" v-if="errors.has('email')">{{ errors.first("email") }}</span>
+          <input type="email"
+                 class="form-control"
+                 name="email"
+                 v-model="msg.email" />
         </div>
         <div class="form-group">
           <label for="">Subject</label>
-          <input type="text" class="form-control" 
-                 name="subject" 
-                 v-model="msg.subject" 
-                 v-validate="{ required: true, min: 5 }" 
-                 :class="{ 'border-danger': errors.has('subject')}"/>
-          <span class="text-danger" v-if="errors.has('subject')">{{ errors.first("subject") }}</span>
+          <input type="text" class="form-control"
+                 name="subject"
+                 v-model="msg.subject" />
         </div>
         <div class="form-group">
           <label for="">Message</label>
-          <textarea row="4" class="form-control"                  name="body" 
-                 v-model="msg.body" 
-                 v-validate="{ required: true, max: 200 }" 
-                 :class="{ 'border-danger': errors.has('body')}"></textarea>
-          <span class="text-danger" v-if="errors.has('body')">{{ errors.first("body") }}</span>
+          <textarea row="4"
+                    class="form-control"
+                    name="body"
+                    v-model="msg.body"></textarea>
         </div>
         <div class="form-group">
-          <input type="submit" 
-                 class="btn btn-success" 
-                 value="Send" 
-                 :disabled="errors.any()"/>
+          <input type="submit"
+                 class="btn btn-success"
+                 value="Send" />
         </div>
       </form>
     </div>
